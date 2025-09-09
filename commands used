@@ -1,0 +1,77 @@
+-> Initialize the Git repository
+     git init
+-> Create a .gitignore to ignore node_modules and large/OS-specific files
+-> Create a .gitattributes for consistent line endings
+-> Stage project files (excluding node_modules)
+     git add index.html main.js photo.jpg package.json package-lock.json .gitignore .gitattributes
+
+-> Commit the clean project
+     git commit -m "Initial commit - clean VR Electron project"
+
+-> Add GitHub remote (replace with your URL)
+    git remote add origin https://github.com/manasadhandu/electron-js-html-vr.git
+
+-> Set the main branch
+    git branch -M main
+
+->Push project to GitHub
+   git push -u origin main
+ 
+  Electron / NPM Commands
+️-> Install dependencies locally
+     npm install
+     This creates the node_modules folder locally. Do not commit this to GitHub.
+️-> Run the Electron app
+     npm start
+-> Install Node.js & NPM (if not installed)
+     Check if Node.js is installed:
+     node -v
+    npm -v
+
+-> Create Electron Project
+    mkdir my-electron-app
+    cd my-electron-app
+    npm init -y
+    npm install electron --save-dev
+
+-> Test Electron:
+    npx electron --version
+
+-> Run Electron App
+    npm start
+    npx electron .
+
+-> Install & Run HTTP Server
+    Install once globally:
+    npm install -g http-server
+
+-> Run HTTP server on port 61775:
+    http-server -p 61775
+  
+-> You’ll see output like:
+    Available on:
+    http://192.168.1.6:61775
+    http://127.0.0.1:61775
+
+-> Use the 192.168.x.x address on Meta Quest 3 (local network).
+
+-> Install Local SSL Proxy (for HTTPS)
+   Install:
+   npm install -g local-ssl-proxy
+
+-> Run proxy (maps HTTPS → HTTP):
+   npx local-ssl-proxy --source 3443 --target 61775
+This creates:
+https://localhost:3443 → http://localhost:61775
+
+-> Kill Port if Already Used
+   Check if port 3443 is busy:
+   netstat -ano | findstr :3443
+
+-> Find the PID and stop it:
+   tasklist /FI "PID eq <PID>"
+   taskkill /PID <PID> /F
+
+Example:
+  taskkill /PID 13588 /F
+
