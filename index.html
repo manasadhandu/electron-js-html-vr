@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Dual Joystick Control VR Image</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-sky color="#222"></a-sky>
+
+      <!-- Controllers -->
+      <a-entity id="leftHand" hand-controls="hand: left"></a-entity>
+      <a-entity id="rightHand" hand-controls="hand: right"></a-entity>
+
+      <!-- Image wrapped in entity for transformations -->
+      <a-entity id="photoEntity" position="0 1.5 -3" rotation="0 0 0" scale="1 1 1">
+        <a-image src="photo.jpg" width="3" height="2"></a-image>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      const photoEntity = document.getElementById('photoEntity');
+
+      AFRAME.registerComponent('joystick-controls', {
+        init: function () {
+          // Axis move = thumbstick tilt (continuous values)
+          this.el.sceneEl.addEventListener('axismove', (evt) => {
+            if (evt.target.id !== 'leftHand' && evt.target.id !== 'rightHand') return;
+
+            const [x, y] = evt.detail.axis;
+
+            // Move left/right with joystick X
+            photoEntity.object3D.position.x += x * 0.05;
+
+            // Move forward/backward with joystick Y
+            photoEntity.object3D.position.z += y * 0.05;
+          });
+
+          // Thumbstick click-and-drag events (for rotation & zoom)
+          this.el.sceneEl.addEventListener('thumbstickmoved', (evt) => {
+            if (evt.target.id !== 'leftHand' && evt.target.id !== 'rightHand') return;
+
+            const { x, y } = evt.detail;
+
+            // Rotate around Y-axis (left/right joystick motion)
+            photoEntity.object3D.rotation.y += x * 0.05;
+
+            // Zoom in/out with Y-axis
+            let scale = photoEntity.object3D.scale.clone();
+            let zoomFactor = 1 + y * 0.01;
+            scale.multiplyScalar(zoomFactor);
+
+            // Limit zoom so it doesn’t disappear
+            scale.clampScalar(0.5, 5);
+            photoEntity.object3D.scale.copy(scale);
+          });
+        }
+      });
+
+      document.querySelector('a-scene').setAttribute('joystick-controls', '');
+    </script>
+  </body>
+</html>
